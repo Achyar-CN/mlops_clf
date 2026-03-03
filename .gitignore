@@ -1,0 +1,63 @@
+# ==========================================
+# 1. Data & Models (ATURAN EMAS MLOPS)
+# ==========================================
+# Jangan pernah mem-push data mentah maupun data hasil proses
+data/raw/*
+data/processed/*
+*.csv
+*.parquet
+*.json
+
+# Jangan mem-push file model berukuran besar
+models/*
+*.pkl
+*.joblib
+*.h5
+*.pt
+
+# Pengecualian: Boleh mem-push file penanda folder agar strukturnya tetap utuh di Git
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!models/.gitkeep
+
+# ==========================================
+# 2. MLflow & Tracking
+# ==========================================
+# Abaikan folder tempat MLflow menyimpan log dan artefak eksperimen lokal
+mlruns/
+mlartifacts/
+
+# Abaikan laporan HTML yang di-generate oleh Evidently AI
+evidently_drift_report.html
+evidently_report.html
+
+# ==========================================
+# 3. Python & Virtual Environment
+# ==========================================
+# Abaikan folder virtual environment (sesuai nama venv Anda)
+mlops_clf/
+venv/
+env/
+.env
+
+# Abaikan cache bawaan Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================================
+# 4. Testing & Linting
+# ==========================================
+# Abaikan cache dari Pytest
+.pytest_cache/
+
+# ==========================================
+# 5. OS & IDE Editor
+# ==========================================
+# Abaikan konfigurasi editor lokal (VS Code, PyCharm, dll)
+.vscode/
+.idea/
+
+# Abaikan file cache dari sistem operasi Windows/Mac
+Thumbs.db
+.DS_Store

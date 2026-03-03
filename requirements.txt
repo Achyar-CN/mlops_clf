@@ -1,0 +1,11 @@
+pandas
+scikit-learn
+pyyaml
+mlflow
+fastapi
+uvicorn
+pydantic
+gradio
+evidently
+great_expectations
+pytest

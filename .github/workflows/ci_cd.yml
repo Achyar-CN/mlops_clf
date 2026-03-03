@@ -1,0 +1,37 @@
+name: Continuous Integration (MLOps)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Install library dari requirements.txt
+        pip install -r requirements.txt
+        
+    - name: Run Pytest (Unit Testing)
+      run: |
+        # Menjalankan semua skrip test di folder tests/
+        pytest tests/ -v
+        
+    # Catatan MLOps: 
+    # Di level industri, di sinilah Anda menambahkan step untuk:
+    # 1. Pull data asli menggunakan DVC (Data Version Control)
+    # 2. Menjalankan model training (src/train.py) jika ada perubahan hyperparameter
+    # 3. Build Docker Image (Podman) lalu di-push ke Container Registry
