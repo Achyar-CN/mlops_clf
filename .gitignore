@@ -1,5 +1,5 @@
 # ==========================================
-# 1. Data & Models (ATURAN EMAS MLOPS)
+# 1. Data & Models
 # ==========================================
 # Jangan pernah mem-push data mentah maupun data hasil proses
 data/raw/*

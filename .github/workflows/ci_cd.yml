@@ -28,7 +28,7 @@ jobs:
     - name: Run Pytest (Unit Testing)
       run: |
         # Menjalankan semua skrip test di folder tests/
-        pytest tests/ -v
+        python -m pytest tests/ -v
         
     # Catatan MLOps: 
     # Di level industri, di sinilah Anda menambahkan step untuk:
