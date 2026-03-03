@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-pipeline:
+  test-and-build:
     runs-on: ubuntu-latest
     
     steps:
@@ -22,16 +22,24 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        # Install library dari requirements.txt
         pip install -r requirements.txt
         
     - name: Run Pytest (Unit Testing)
+      env:
+        PYTHONPATH: .
       run: |
-        # Menjalankan semua skrip test di folder tests/
         python -m pytest tests/ -v
         
-    # Catatan MLOps: 
-    # Di level industri, di sinilah Anda menambahkan step untuk:
-    # 1. Pull data asli menggunakan DVC (Data Version Control)
-    # 2. Menjalankan model training (src/train.py) jika ada perubahan hyperparameter
-    # 3. Build Docker Image (Podman) lalu di-push ke Container Registry
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      
+    - name: Build Container Image (API & Model)
+      run: |
+        echo "Memulai proses build container..."
+        # Menjalankan build menggunakan Containerfile Anda dari root direktori
+        docker build -f deployment/Containerfile -t titanic-fastapi:latest .
+        
+    - name: Verifikasi Build Sukses
+      run: |
+        echo "Container berhasil dirakit! Berikut daftar image di server GitHub:"
+        docker images | grep titanic-fastapi

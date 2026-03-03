@@ -1,0 +1,17 @@
+# 1. Gunakan OS Linux versi ringan yang sudah terinstal Python 3.9
+FROM python:3.9-slim
+
+# 2. Set direktori kerja di dalam container
+WORKDIR /app
+
+# 3. Salin HANYA requirements.txt terlebih dahulu (Best Practice untuk caching)
+COPY requirements.txt .
+
+# 4. Install library tanpa menyimpan cache agar ukuran container tetap kecil
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 5. Salin seluruh sisa file proyek Anda ke dalam container
+COPY . .
+
+# 6. Ekspos port (Opsional, sebagai dokumentasi)
+EXPOSE 8000 7860

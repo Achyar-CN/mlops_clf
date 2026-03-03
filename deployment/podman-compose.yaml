@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Container 1: Tracking Server (MLflow)
+  mlflow_server:
+    image: python:3.9-slim
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount folder mlruns lokal agar model yang Anda latih terbaca di dalam container
+      - ../mlruns:/app/mlruns 
+    working_dir: /app
+    command: >
+      bash -c "pip install mlflow && mlflow ui --host 0.0.0.0 --port 5000"
+
+  # Container 2: Model Serving (FastAPI)
+  api_service:
+    build:
+      context: ..                       # Arahkan build ke root folder
+      dockerfile: deployment/Containerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Beritahu API untuk mencari MLflow di container "mlflow_server"
+      - MLFLOW_TRACKING_URI=http://mlflow_server:5000 
+    volumes:
+      # Mount folder data agar log current.csv tersimpan di laptop Anda, bukan hilang saat container mati
+      - ../data:/app/data
+    depends_on:
+      - mlflow_server
+    command: uvicorn src.api:app --host 0.0.0.0 --port 8000
+
+  # Container 3: Monitoring Dashboard (Gradio + Evidently)
+  monitor_service:
+    build:
+      context: ..
+      dockerfile: deployment/Containerfile
+    ports:
+      - "7860:7860"
+    volumes:
+      # Gradio butuh akses membaca file current.csv dan reference.csv
+      - ../data:/app/data
+    depends_on:
+      - api_service
+    command: python src/monitor_ui.py

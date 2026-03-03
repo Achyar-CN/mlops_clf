@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 # Konfigurasi MLflow
-mlflow.set_tracking_uri("http://localhost:5000")
+TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
 MODEL_NAME = "Titanic_RF_Model"
 MODEL_URI = f"models:/{MODEL_NAME}/latest"
 

@@ -3,7 +3,6 @@ from pydantic import BaseModel
 import csv
 import os
 
-# Import fungsi prediksi yang sudah dipisahkan
 from src.predict import make_prediction
 from src.config import config
 
