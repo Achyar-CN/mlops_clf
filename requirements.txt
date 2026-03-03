@@ -6,7 +6,7 @@ fastapi
 uvicorn
 pydantic
 gradio
-evidently
+scipy
 pandera
 pytest
 podman-compose
