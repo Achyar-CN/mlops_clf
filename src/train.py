@@ -1,3 +1,4 @@
+import os
 import yaml
 import mlflow
 import mlflow.sklearn
@@ -13,7 +14,8 @@ from src.data_pipeline import run_data_pipeline
 from src.config import config
 
 # Konfigurasi MLflow
-mlflow.set_tracking_uri("http://localhost:5000")
+TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "file:./mlruns")
+mlflow.set_tracking_uri(TRACKING_URI)
 mlflow.set_experiment(config['mlflow']['experiment_name'])
 
 def train_model():
