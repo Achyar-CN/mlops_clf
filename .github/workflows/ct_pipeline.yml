@@ -37,12 +37,12 @@ jobs:
         wget -O data/raw/titanic.csv https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
         echo "Data berhasil diunduh ke data/raw/titanic.csv!"
         
-    - name: Validasi Data Mentah (Great Expectations)
+    - name: Validasi Data Mentah (Pandera)
       env:
         PYTHONPATH: .
       run: |
-        echo "Menjalankan validasi data..."
-        python src/validate.py
+        echo "Menjalankan validasi data dengan Pandera..."
+        python -m src.validate
         
     - name: Jalankan Re-training Model (MLflow)
       env:

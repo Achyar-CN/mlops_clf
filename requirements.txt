@@ -7,6 +7,6 @@ uvicorn
 pydantic
 gradio
 evidently
-great_expectations
+pandera
 pytest
 podman-compose

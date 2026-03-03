@@ -1,30 +1,33 @@
 import pandas as pd
-import great_expectations as ge
+import pandera as pa
+from pandera import Column, DataFrameSchema, Check
 from src.config import config
 
 def validate_raw_data():
-    print("Mulai validasi data mentah...")
+    print("Memulai validasi data menggunakan Pandera...")
     
-    # Load data mentah ke dalam Great Expectations Pandas Dataset
-    df_pandas = pd.read_csv(config['data']['raw_path'])
-    df = ge.from_pandas(df_pandas)
+    # 1. Baca data dengan Pandas biasa
+    df = pd.read_csv(config['data']['raw_path'])
     
-    # 1. Ekspektasi: Kolom Pclass hanya boleh berisi 1, 2, atau 3
-    exp_pclass = df.expect_column_values_to_be_in_set("Pclass", [1, 2, 3])
+    # 2. Definisikan Skema Aturan (Rule)
+    schema = DataFrameSchema({
+        # Kolom Survived harus angka, isinya hanya boleh 0 atau 1
+        "Survived": Column(int, Check.isin([0, 1])),
+        
+        # Kolom Age harus angka, nilainya antara 0-100, dan boleh kosong (nullable)
+        "Age": Column(float, Check.between(0, 100), nullable=True),
+        
+        # Kolom Pclass harus angka 1, 2, atau 3
+        "Pclass": Column(int, Check.isin([1, 2, 3]))
+    })
     
-    # 2. Ekspektasi: Umur tidak boleh negatif (bisa null karena ditangani pipeline, tapi jika ada, harus > 0)
-    exp_age = df.expect_column_values_to_be_between("Age", min_value=0.0, max_value=120.0, mostly=0.99)
-    
-    # 3. Ekspektasi: Sex hanya boleh 'male' atau 'female'
-    exp_sex = df.expect_column_values_to_be_in_set("Sex", ["male", "female"])
-    
-    # Evaluasi hasil
-    if not (exp_pclass["success"] and exp_age["success"] and exp_sex["success"]):
-        print("Validasi Gagal! Periksa kembali data mentah Anda.")
-        return False
-    
-    print("Validasi Sukses! Data siap digunakan untuk training/inferensi.")
-    return True
+    # 3. Lakukan Validasi
+    try:
+        validated_df = schema.validate(df)
+        print("✅ Validasi berhasil! Data aman dan sesuai aturan.")
+    except pa.errors.SchemaError as exc:
+        print(f"❌ Validasi gagal pada kolom/aturan tertentu:\n{exc}")
+        raise # Hentikan program jika data korup
 
 if __name__ == "__main__":
     validate_raw_data()
