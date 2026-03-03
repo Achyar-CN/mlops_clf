@@ -6,7 +6,8 @@ def validate_raw_data():
     print("Mulai validasi data mentah...")
     
     # Load data mentah ke dalam Great Expectations Pandas Dataset
-    df = ge.read_csv(config['data']['raw_path'])
+    df_pandas = pd.read_csv(config['data']['raw_path'])
+    df = ge.from_pandas(df_pandas)
     
     # 1. Ekspektasi: Kolom Pclass hanya boleh berisi 1, 2, atau 3
     exp_pclass = df.expect_column_values_to_be_in_set("Pclass", [1, 2, 3])

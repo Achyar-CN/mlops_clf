@@ -28,20 +28,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
+    - name: Pull Data Asli dari Cloud (Download Dataset)
+      run: |
+        echo "Mengunduh dataset Titanic terbaru..."
+        # Membuat folder data/raw jika belum ada
+        mkdir -p data/raw
+        # Mengunduh data titanic dari repositori publik sebagai simulasi S3/DVC
+        wget -O data/raw/titanic.csv https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv
+        echo "Data berhasil diunduh ke data/raw/titanic.csv!"
+        
     - name: Validasi Data Mentah (Great Expectations)
       env:
         PYTHONPATH: .
       run: |
-        echo "Memastikan data terbaru tidak ada yang korup..."
+        echo "Menjalankan validasi data..."
         python src/validate.py
         
     - name: Jalankan Re-training Model (MLflow)
       env:
         PYTHONPATH: .
       run: |
-        echo "Melatih ulang model menggunakan data terbaru..."
+        echo "Melatih ulang model menggunakan data yang baru diunduh..."
         python src/train.py
         
     - name: Laporan Selesai
       run: |
-        echo "Continuous Training selesai dieksekusi!"
+        echo "Continuous Training BENAR-BENAR selesai! Model baru berhasil dilatih."
