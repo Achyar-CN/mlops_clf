@@ -1,7 +1,7 @@
 data:
-  raw_path: "../data/raw/titanic.csv"
-  processed_path: "../data/processed/reference.csv"
-  current_path: "../data/processed/current.csv"
+  raw_path: "data/raw/titanic.csv"
+  processed_path: "data/processed/reference.csv"
+  current_path: "data/processed/current.csv"
 model:
   target_col: "Survived"
   features: ["Pclass", "Sex", "Age", "Fare"]
